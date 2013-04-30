@@ -11,8 +11,6 @@
             <form method="POST" action="" accept-charset="UTF-8">
             <fieldset>
                 <legend> Edit Status </legend>
-                <input type="text" class="span4" name="localisation" placeholder="Localisation"  value="{{ set_value('localisation', l) }}" />
-                <div class="text-error">{{ form_error('localisation') }}</div>
                 
                 <textarea name="statut" class="span4" rows="4" placeholder="write your Status">{{ set_value('statut', s) }}</textarea>
                 <div class="text-error">{{ form_error('statut') }}</div>

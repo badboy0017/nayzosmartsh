@@ -1,43 +1,35 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Modifier Photo</title>
-    </head>
 
-    <body>
-        <div>
-            Modifier photo | <a href="/photo">Photo</a> |
-            <a href="/">Home</a>
-        </div>
-            
-            <div>
-                <form action="" method="post">
-                    <label>
-                        <strong>Localisation</strong>
-                    </label>
-                        <input type="text" name="localisation" value="{{ set_value('localisation', l) }}" />
-                    {{ form_error('localisation') }}
-                    <br />
-                    <label>
-                        <strong>Categorie</strong>
-                    </label>
-                    <select name="cat">
-                        <option value="Famille">Famille</option>
-                        <option value="Vacance">Vacance</option>
-                        <option value="Autres">Autres</option>
+{% extends "/layout.twig" %}
+
+{% block title %} {{parent()}} - Edit Status{% endblock title %}
+{#---Header---#}
+{%block header%}
+    <header class="bar-top"></header>
+{%endblock header%}
+    
+{%block content%}
+    <div class="row">
+        <div class="span4 offset4 well2">
+            <form method="POST" action="" accept-charset="UTF-8">
+                <fieldset>
+                    <legend>Edit Status</legend>
+                    <div class="error-form">
+                        {{ validation_errors() }}
+                    </div>
+                    <label>Category</label>
+                    <select name="cat" class="span4">
+                        <option value="Family">Family</option>
+                        <option value="Freinds">Freinds</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="Other">Other</option> 
                     </select>
-                    <br />
-                    <label>
-                        <strong>Statut</strong>
-                    </label>
-                    <textarea name="statut">{{ set_value('statut', s) }}</textarea>
+                    <label>Status</label>
+                    <textarea name="statut" class="span4" rows="5">{{ set_value('statut', s) }}</textarea>
                     {{ form_error('statut') }}
-                    <br />
-                    <input type="submit" value="Modifier" />
-                </form>
-            </div>
-    </body>
-</html>
-
-
+                    <input type="submit" name="submit" class="btn btn-block btn-inverse" value="Edit">
+                 </fieldset>
+            </form>    
+        </div>
+   </div>
+{%endblock content%}
+ 

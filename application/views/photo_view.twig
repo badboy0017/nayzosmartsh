@@ -1,37 +1,74 @@
-<!DOCTYPE>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Photo</title>
-    </head>
+{% extends "/layout.twig" %}
 
-    <body>
-        <header>
-            Photo : <a href="/">Home</a> |
-                    <a href="/photo/categorie">Categorie</a>
-        </header>
-            
-        <div>
-            <ul>
-                {% for ph in res %}
-                <li>
-                    <img src="/uploads/{{ph.photo}}" alt={{ph.photo}} />
-                    {{ ph.date_envoi }} | {{ ph.categorie }} | {{ ph.localisation }} | {{ ph.statut }} |{{ ph.etat }} |
-                    <a href="/photo/supprimer/{{ ph.id }}" class="deleteadmin">Supprimer</a>
-                    <a href="/photo/modifier/{{ ph.id }}">modifier</a>
-                    {%if ph.partage == 0%}
-                    <a href="/photo/publierfb/{{ ph.id }}">Partager</a>
-                    {% else %}
-                    <a href="/photo/publierfb/{{ ph.id }}">Repartager</a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+{% block title %} {{parent()}} - Photos{% endblock title %}
+{#---Header---#}
+{%block header%}
+<header class="bar-top"></header>
+{%endblock header%}
+
+{%block content%}
+<div class="row">
+    <div class="span10 well2 offset1">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <a class="brand" href="#">Category</a>
+                <ul class="nav">
+                    <li><a href="/photo/index">All</a></li>
+                    <li><a href="/photo/index/Famille">Family</a></li>
+                    <li><a href="/photo/index/Amis">Freinds</a></li>
+                    <li><a href="/photo/index/Vacance">Holiday</a></li>
+                    <li><a href="/photo/index/Autres">Other</a></li>
+                </ul>
+            </div>
         </div>
-    </body>
-    
-    <script src="{{js_url('jquery-1.9.1.min')}}"></script>
-    <script src="{{js_url('smart')}}"></script>
-</html>
+        {% if not res %}
+        <div class="span9" style="margin-top: 23px;"><div class="alert-error alert">No image for this category</div></div>
+        {% else %}
+        
+        {% for ph in res %}
+        <div class="span3 well3">
+            <div class="image_grid">
+                <ul id="list" class="da-thumbs">
+                    <li>
+                        <img src="/uploads/{{ph.photo}}" alt={{ph.photo}} style="height:247px">
+                        <article class="da-animate" style="display: block; color: white">
+                            <em>{{ ph.etat }} </em>
+                                {%if ph.partage == 0%}
+                            <span class="link" title="Share Photo"><a href="/photo/publierfb/{{ ph.id }}"><i class="icon-share-alt"></i></a></span>
+                                {% else %}
+                            <span class="link" title="Share Photo"><a href="/photo/publierfb/{{ ph.id }}"><i class="icon-share-alt"></i></a></span>
+                                {% endif %}
+                            <span class="link" title="Edit Photo"><a href="/photo/modifier/{{ ph.id }}"><i class="icon-edit"></i></a></span>
+                            <span class="link" title="Delete Photo"><a href="/photo/supprimer/{{ ph.id }}" class="deleteadmin"><i class="icon-trash"></i></a></span>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+            <div class="span3" style="width: 240px;">
+                <div class="row">
+                    <p class="example btn btn-block" rel="tooltip" data-html="true" data-placement="top" data-content="<strong>Catégorie: {{ ph.categorie }}</strong> <br/> {{ ph.statut }}" data-original-title="<i class='icon-calendar'></i> {{ ph.date_envoi }}">
+                        Status
+                    </p>
+                </div>
+            </div>
 
+        </div>
+       {% endfor %}
+       {% endif%}
+    </div>
+</div>
+{%endblock content%}
+{% block js %}
+<script src="{{js_url('smart')}}"></script>
+<script type="text/javascript">  $('.example').popover()();</script>
+<script src="{{base_url()}}assets/js/jquery-hover-effect.js"></script>
+<script type="text/javascript">
+       //Image Hover
+       jQuery(document).ready(function(){
+           jQuery(function() {
+               jQuery('ul.da-thumbs > li').hoverdir();
+           });
+       });
+    </script>
+{% endblock js %}
 
