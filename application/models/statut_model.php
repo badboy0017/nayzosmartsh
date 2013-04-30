@@ -10,7 +10,8 @@ class Statut_model extends CI_Model
     
     public function getStatut($id)
     {
-        return $this->db->get_where($this->table, array('id' => $id))->row();
+        return $this->db->where('id', $id)->get($this->table)->row();
+        //return $this->db->get_where($this->table, array('id' => $id))->row();
     }
     
     public function getAllNonAttachStatus($id)
@@ -48,16 +49,25 @@ class Statut_model extends CI_Model
         if(empty($id))
             return false;
         
-        $data = array('localisation' => $this->input->post('localisation'),
-                      'statut' => $this->input->post('statut'),
+        $data = array('statut' => $this->input->post('statut'),
                       'date_envoi' => date('Y-m-d H:i:s'));
         $this->db->update($this->table, $data, array('id' => $id));
         return true;
     }
 
-        public function deleteStatut($id)
+    public function deleteStatut($id)
     {
         $this->db->delete($this->table, array('id' => $id));
+    }
+    
+    public function search($text)
+    {
+        $query = $this->db->where('user', getsessionhelper()['id'])->like('statut', $text)->get($this->table);
+        
+        if($query->num_rows() != 0)
+            return $query->result();
+        else
+            return false;
     }
 
 }

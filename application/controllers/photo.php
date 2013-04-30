@@ -72,9 +72,6 @@ class Photo extends CI_Controller
         $data['s'] = $this->statut_model->getStatut($this->photo_model->getPhoto($id)->statut)->statut;
         $data['l'] = $this->photo_model->getPhoto($id)->localisation;
         
-        //$this->form_validation->set_error_delimiters('<p class="form_erreur">', '</p>');
-        
-        $this->form_validation->set_rules('localisation', '\'Localisation\'', 'trim|required|max_length[255]|xss_clean');
         $this->form_validation->set_rules('statut', '\'Statut\'', 'trim|required|xss_clean');
         
         if($this->form_validation->run())
@@ -104,14 +101,13 @@ class Photo extends CI_Controller
         $res   = $this->photo_model->getPhoto($id);
         $photo = $path . $res->photo;
         $msg   = $this->statut_model->getStatut($res->statut)->statut;
-        $lieu  = $this->statut_model->getStatut($res->statut)->localisation;
         
         $uid = $this->fb->getUser();
         
         if (empty($uid)) //User non connecté sur facebook
         {
             $param = array();
-            $param['redirect_uri'] = 'http://localhost:8094/photo/publierfb/' . $id;
+            $param['redirect_uri'] = base_url().'photo/publierfb/' . $id;
             $param['display'] = 'popup';
             redirect($this->fb->getLoginUrl($param));
         }
@@ -119,12 +115,12 @@ class Photo extends CI_Controller
         {
             try
             {
-                $this->fb->api('/me/photos', 'POST', array('source' => '@'.$photo, 'message' => $msg . ' @' . $lieu));
+                $this->fb->api('/me/photos', 'POST', array('source' => '@'.$photo, 'message' => $msg));
                 //redirect('/photo');
                 if(!$this->photo_model->setShared($id))
                     echo 'Erreur modification attribut partagé de la photo<br />';
                 
-                echo 'Photo partagee';
+                redirect('photo/index');
             }
             catch(FacebookApiException $e)
             {

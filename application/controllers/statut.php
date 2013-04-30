@@ -55,16 +55,16 @@ class Statut extends CI_Controller
             exit('Erreur ID Statut');
         
         $data = array();
-        $data['s'] = $this->statut_model->getStatut($id)->statut;
-        $data['l'] = $this->statut_model->getStatut($id)->localisation;
+        $data['s']  = $this->statut_model->getStatut($id)->statut;
+        $data['id'] = $id;
         
-        //$this->form_validation->set_error_delimiters('<p class="form_erreur">', '</p>');
-        
-        $this->form_validation->set_rules('localisation', '\'Localisation\'', 'trim|required|max_length[255]|xss_clean');
         $this->form_validation->set_rules('statut', '\'Statut\'', 'trim|required|xss_clean');
         
         if($this->form_validation->run())
         {
+            echo $id . '<br />';
+            echo $this->input->post('statut');
+            return;
             $this->statut_model->updateStatut($id);
             redirect('/statut');
         }
@@ -88,14 +88,13 @@ class Statut extends CI_Controller
     {
         //Initialisation
         $msg   = $this->statut_model->getStatut($id)->statut;
-        $lieu  = $this->statut_model->getStatut($id)->localisation;
         
         $uid = $this->fb->getUser();
         
         if (empty($uid)) //User non connecté sur facebook
         {
             $param = array();
-            $param['redirect_uri'] = 'http://localhost:8094/statut/publierfb/' . $id;
+            $param['redirect_uri'] = base_url().'statut/publierfb/' . $id;
             $param['display'] = 'popup';
             redirect($this->fb->getLoginUrl($param));
         }
@@ -103,12 +102,12 @@ class Statut extends CI_Controller
         {
             try
             {
-                $this->fb->api('/me/feed', 'POST', array('message' => $msg . ' @' . $lieu));
+                $this->fb->api('/me/feed', 'POST', array('message' => $msg));
                 
                 if(!$this->statut_model->setShared($id))
                     echo 'Erreur modification attribut partagé du statut <br />';
                     
-                echo 'Lien partage';
+                redirect('statut');
             }
             catch(FacebookApiException $e)
             {
@@ -118,6 +117,34 @@ class Statut extends CI_Controller
                 echo '<br />';
                 echo $e->getMessage();
             }   
+        }
+    }
+    
+    public function search()
+    {
+        
+        $data['res'] = $this->statut_model->getAllNonAttachStatus(getsessionhelper()['id']);
+        
+        
+        
+        
+        $data = array();
+        $text = $this->input->post('rech');
+        $res  = $this->statut_model->search($text);
+        $data['res'] = $res;
+        
+        if(!$res)
+            echo 'aucun resultat';
+        else
+        {
+            foreach($data['res'] as $value)
+            {
+                if($value->partage == 0)
+                    $value->etat = 'Statut non partagé';
+                else
+                    $value->etat = 'Statut partagé';
+            }
+            $this->twig->render('search_view', $data);
         }
     }
     

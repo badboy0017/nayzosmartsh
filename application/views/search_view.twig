@@ -8,7 +8,6 @@
     
 {%block content%}
     <div class="span12 well2">
-         <a href="/statut/nouveau" class="btn pull-right">New Status</a>
           <table class="table table-striped  table-bordered">
               <tr>
                   <th>Status</th>
@@ -24,7 +23,9 @@
                 <td>
                     <a href="/statut/modifier/{{ ph.id }}" class="btn" title="Edit Status"> <i class="icon-edit"></i></a>
                     <a href="/statut/supprimer/{{ ph.id }}" class="btn deleteadmin" title="Delete Status"> <i class="icon-trash"></i></a>
+                    {%if ph.partage == 0%}
                     <a href="/statut/publierfb/{{ ph.id }}" class="btn" title="Share Status"> <i class="icon-share-alt"></i></a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

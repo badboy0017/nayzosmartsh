@@ -16,8 +16,6 @@ class Profil extends CI_Controller
     
     public function modifier_profil()
     {
-        //$this->form_validation->set_error_delimiters('<p class="form_erreur">', '</p>');
-        
         $this->form_validation->set_rules('nom', '\'Nom\'', 'trim|required|max_length[30]|xss_clean');
         $this->form_validation->set_rules('email', '\'Email\'', 'trim|required|valid_email|xss_clean');
         

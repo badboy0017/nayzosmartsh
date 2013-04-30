@@ -8,16 +8,12 @@
     
 {%block content%}
     <div class="span4 offset4 well2">
-            <form method="POST" action="" accept-charset="UTF-8">
+        <form action="statut/modifier/{{id}}" method="POST" accept-charset="UTF-8">
             <fieldset>
                 <legend> Edit Status </legend>
-                
                 <textarea name="statut" class="span4" rows="4" placeholder="write your Status">{{ set_value('statut', s) }}</textarea>
                 <div class="text-error">{{ form_error('statut') }}</div>
-
-                
-
-                <input type="submit" name="submit" class="btn btn-block btn-inverse" value="Add Status">
+                <input type="submit" name="submit" class="btn btn-block btn-inverse" value="Edit Status">
             </fieldset>
         </form>
     </div> 
