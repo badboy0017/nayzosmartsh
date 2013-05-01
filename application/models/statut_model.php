@@ -11,7 +11,6 @@ class Statut_model extends CI_Model
     public function getStatut($id)
     {
         return $this->db->where('id', $id)->get($this->table)->row();
-        //return $this->db->get_where($this->table, array('id' => $id))->row();
     }
     
     public function getAllNonAttachStatus($id)

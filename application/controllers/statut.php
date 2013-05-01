@@ -55,25 +55,22 @@ class Statut extends CI_Controller
             exit('Erreur ID Statut');
         
         $data = array();
-        $data['s']  = $this->statut_model->getStatut($id)->statut;
-        $data['id'] = $id;
+        $data['s'] = $this->statut_model->getStatut($id)->statut;
         
         $this->form_validation->set_rules('statut', '\'Statut\'', 'trim|required|xss_clean');
         
         if($this->form_validation->run())
         {
-            echo $id . '<br />';
-            echo $this->input->post('statut');
-            return;
-            $this->statut_model->updateStatut($id);
-            redirect('/statut');
+            if($this->statut_model->updateStatut($id))
+                redirect('/statut');
+            else
+                exit('Erreur UpdateStatut: Function returned false');
         }
         else
         {
             $this->twig->render('modifier_statut_view', $data);
         }
     }
-
 
     public function supprimer($id)
     {
@@ -122,19 +119,14 @@ class Statut extends CI_Controller
     
     public function search()
     {
-        
-        $data['res'] = $this->statut_model->getAllNonAttachStatus(getsessionhelper()['id']);
-        
-        
-        
-        
         $data = array();
         $text = $this->input->post('rech');
         $res  = $this->statut_model->search($text);
         $data['res'] = $res;
+        $data['empty'] = false;
         
         if(!$res)
-            echo 'aucun resultat';
+            $data['empty'] = true;
         else
         {
             foreach($data['res'] as $value)
@@ -144,8 +136,8 @@ class Statut extends CI_Controller
                 else
                     $value->etat = 'Statut partagé';
             }
-            $this->twig->render('search_view', $data);
         }
+        $this->twig->render('search_view', $data);
     }
     
 }

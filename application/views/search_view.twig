@@ -3,39 +3,44 @@
 {% block title %} {{parent()}} - Edit Password{% endblock title %}
 {#---Header---#}
 {%block header%}
-    <header class="bar-top"></header>
+<header class="bar-top"></header>
 {%endblock header%}
-    
+
 {%block content%}
-    <div class="span12 well2">
-          <table class="table table-striped  table-bordered">
-              <tr>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>State</th>
-                  <th>Action</th>
-              </tr>
+
+{% if empty %}
+<div class="span12 well2">
+    <div class="span9" style="margin-top: 23px;">
+        <div class="alert-error alert">No result found</div>
+    </div>
+</div>
+{% else%}
+<div class="span12 well2">
+    <table class="table table-striped  table-bordered">
+        <tr>
+            <th>Status</th>
+            <th>Date</th>
+            <th>State</th>
+            <th>Action</th>
+        </tr>
             {% for ph in res %}
-            <tr>
-                <td>{{ ph.statut }} </td>
-                <td> {{ ph.date_envoi }} </td>
-                <td>{{ ph.etat }} </td>
-                <td>
-                    <a href="/statut/modifier/{{ ph.id }}" class="btn" title="Edit Status"> <i class="icon-edit"></i></a>
-                    <a href="/statut/supprimer/{{ ph.id }}" class="btn deleteadmin" title="Delete Status"> <i class="icon-trash"></i></a>
-                    {%if ph.partage == 0%}
-                    <a href="/statut/publierfb/{{ ph.id }}" class="btn" title="Share Status"> <i class="icon-share-alt"></i></a>
-                    {% endif %}
-                </td>
-            </tr>
+        <tr>
+            <td>{{ ph.statut }} </td>
+            <td> {{ ph.date_envoi }} </td>
+            <td>{{ ph.etat }} </td>
+            <td>
+                <a href="/statut/modifier/{{ ph.id }}"  class="btn" title="Edit Status"> <i class="icon-edit"></i></a>
+                <a href="/statut/supprimer/{{ ph.id }}" class="btn deleteadmin" title="Delete Status"> <i class="icon-trash"></i></a>
+                <a href="/statut/publierfb/{{ ph.id }}" class="btn" title="Share Status"> <i class="icon-share-alt"></i></a>
+            </td>
+        </tr>
             {% endfor %}
-            </table>
-        </div>
-    </div> 
+    </table>
+</div>
+{% endif %}
 {%endblock content%}
 {% block js %}
-    <script src="{{js_url('smart')}}"></script>
+<script src="{{js_url('smart')}}"></script>
 {% endblock js %}
-    
-    
-    
+
+

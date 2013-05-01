@@ -31,12 +31,15 @@ class Photo extends CI_Controller
             $data['res'] = $this->photo_model->getAllPhotos(getsessionhelper()['id']);
             foreach($data['res'] as $value)
             {
-                $value->statut = $this->statut_model->getStatut($value->statut)->statut;
+                if($value->statut == 0)
+                    $value->statut = '';
+                else
+                    $value->statut = $this->statut_model->getStatut($value->statut)->statut;
                 
                 if($value->partage == 0)
-                    $value->etat = 'Image non partagé';
+                    $value->etat = 'Not shared';
                 else
-                    $value->etat = 'Image partagé';
+                    $value->etat = 'Shared';
             }
             
             $this->twig->render('photo_view', $data);
@@ -46,12 +49,15 @@ class Photo extends CI_Controller
             $data['res'] = $this->photo_model->getPhotosByCategorie(getsessionhelper()['id'], $categorie);
             foreach($data['res'] as $value)
             {
-                $value->statut = $this->statut_model->getStatut($value->statut)->statut;
+                if($value->statut == 0)
+                    $value->statut = '';
+                else
+                   $value->statut = $this->statut_model->getStatut($value->statut)->statut;
                 
                 if($value->partage == 0)
-                    $value->etat = 'Image non partagé';
+                    $value->etat = 'Not shared';
                 else
-                    $value->etat = 'Image partagé';
+                    $value->etat = 'Shared';
             }
             $this->twig->render('photo_view', $data);
         }
@@ -69,8 +75,12 @@ class Photo extends CI_Controller
             exit('Erreur ID Photo');
         
         $data = array();
-        $data['s'] = $this->statut_model->getStatut($this->photo_model->getPhoto($id)->statut)->statut;
-        $data['l'] = $this->photo_model->getPhoto($id)->localisation;
+        $id_photo = $this->photo_model->getPhoto($id)->statut;
+        
+        if($id_photo == 0)
+            $data['s'] = '';
+        else
+            $data['s'] = $this->statut_model->getStatut($id_photo)->statut;
         
         $this->form_validation->set_rules('statut', '\'Statut\'', 'trim|required|xss_clean');
         
@@ -135,17 +145,6 @@ class Photo extends CI_Controller
     
 }
 
-
-/*$img = $this->fb->api('/me/feed', 'POST', array('link' => 'www.lol.com',
-                                                            'message' => 'Test'));
-
-$ret_obj = $this->fb->api('/me/photos', 'POST', array('source' => '@' . $photo,
-                                                      'message' => $msg,));
-
-echo '<pre>';
-print_r($img);
-echo '</pre>';
-*/
 ?>
 
 
